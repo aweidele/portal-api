@@ -19,7 +19,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./ # Ensure this is correct
+          local-dir: ./docroot/ # Ensure this is correct
           server-dir: /public_html/portal_api/ # Adjust your deployment path
           exclude: |
             config.php
