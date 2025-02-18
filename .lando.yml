@@ -1,0 +1,4 @@
+name: portalapi
+recipe: lamp
+config:
+  webroot: ./docroot
