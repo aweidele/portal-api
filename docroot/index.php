@@ -17,9 +17,11 @@ $portalID = $_GET["portalID"];
 $sql = "SELECT * FROM links, link_cat ";
 $sql .= "WHERE active = 1 AND catID = cat ";
 if($portalID) { 
-	$sql .= "AND portalID=`".$portalID."` "; 
+	$sql .= "AND links.portal = \"".$portalID."\" "; 
 }
 $sql .= "ORDER BY rank, linkName";
+
+// SELECT * FROM links, link_cat WHERE active = 1 AND catID = cat AND links.portal = "b8aee059" ORDER BY rank, linkName;
 
 // $sql = "
 // 	SELECT		*
