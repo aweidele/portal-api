@@ -17,10 +17,9 @@ $portalID = $_GET["portalID"];
 $sql = "SELECT * FROM links, link_cat ";
 $sql .= "WHERE active = 1 AND catID = cat ";
 if($portalID) { 
-	$sql .= "AND portalID=`".$portalID."`"; 
+	$sql .= "AND portalID=`".$portalID."` "; 
 }
 $sql .= "ORDER BY rank, linkName";
-echo $sql;
 
 // $sql = "
 // 	SELECT		*
@@ -35,4 +34,5 @@ $db = mysqli_select_db($connection,$database) or die ("Couldn't select database"
 $sql_result = mysqli_query($connection, $sql) or die ("Couldn't execute query.");
 $results = mysqli_fetch_all($sql_result, MYSQLI_ASSOC);
 $results[] = $portalID;
-// echo json_encode($results);
+$results[] = $sql;
+echo json_encode($results);
