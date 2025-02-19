@@ -13,12 +13,16 @@ if (file_exists($config)) {
 }
 
 $portalID = $_GET["portalID"];
+$sql = "SELECT * FROM links, link_cat ";
+$sql .= "FROM links, link_cat ";
+$sql .= "WHERE active = 1 AND catID = cat ";
+$sql .= "ORDER BY	rank, linkName";
 
-$sql = "
-	SELECT		*
-	FROM		links, link_cat
-	WHERE		active = 1 AND catID = cat
-	ORDER BY	rank, linkName";
+// $sql = "
+// 	SELECT		*
+// 	FROM		links, link_cat
+// 	WHERE		active = 1 AND catID = cat
+// 	ORDER BY	rank, linkName";
 
 	// echo $sql;
 $connection = mysqli_connect($server, $user, $password) or die ("Couldn't connect to server.");
