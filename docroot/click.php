@@ -19,7 +19,6 @@ if(isset($_GET['link']) && $_GET['link'] != '') {
     SELECT		url, linkID, clicks
     FROM		links
     WHERE       linkID = ".$_GET['link'];
-  echo $sql;
 
   $sql_result = mysqli_query($connection, $sql) or die ("Couldn't execute query.<br />$sql");
   $row = mysqli_fetch_array($sql_result);
