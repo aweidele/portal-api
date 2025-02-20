@@ -16,7 +16,7 @@ if (file_exists($config)) {
 $connection = mysqli_connect($server, $user, $password) or die ("Couldn't connect to server.");
 $db = mysqli_select_db($connection,$database) or die ("Couldn't select database");
 
-$portalID = $_GET["portalID"];
+$portalID = isset($_GET["portalID"]) ? $_GET["portalID"] : false;
 
 /* GET BOOKMARKS */
 $sql = "SELECT * FROM links ";
