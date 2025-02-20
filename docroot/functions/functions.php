@@ -26,3 +26,37 @@ function get_bookmarks($conn,$portalID) {
     "bookmarks" => $bookmarks
   ]);
 }
+
+function add_bookmark($conn, $bookmark) {
+  if (!isset($bookmark["linkName"], $bookmark["url"], $bookmark["cat"], $bookmark["portal"])) {
+    echo json_encode(["error" => "Missing required fields"]);
+    exit;
+  }
+
+  
+
+  if(!$stmt = $conn->prepare("INSERT INTO links (linkName, url, cat, portal) VALUES (?, ?, ?, ?)")) {
+    echo json_encode(["error" => "There was an error"]);
+    exit;
+  }
+  if(!$stmt->bind_param("ssss", $bookmark["linkName"], $bookmark["url"], $bookmark["cat"], $bookmark["portal"])){
+    echo json_encode(["error" => "There was an error2"]);
+    exit;
+  }
+
+  $response = [];
+  if($stmt->execute()) {
+    $last_id = $conn->insert_id;
+    $result = $conn->query("SELECT * FROM links WHERE linkID = $last_id");
+
+    if ($row = $result->fetch_assoc()) {
+      $response = ["success" => true, "data" => $row];
+    } else {
+      $response = ["success" => false, "error" => "Could not retrieve inserted record"];
+    }
+  } else {
+    $response = ["success" => false, "error" => $stmt->error];
+  }
+
+  echo json_encode($response);
+}
