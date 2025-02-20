@@ -29,4 +29,8 @@ switch ($method) {
 		$portalID = isset($_GET["portalID"]) ? $_GET["portalID"] : false;
 		get_bookmarks($conn,$portalID);
 		break;
+	case "POST":
+		$data = json_decode(file_get_contents("php://input"), true);
+		add_bookmark($conn, $data);
+		break;
 }
