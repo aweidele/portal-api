@@ -16,4 +16,17 @@ if (file_exists($config)) {
 	die('Both main and fallback files are missing.');
 }
 
-$conn = new mysqli("localhost", "your_user", "your_password", "your_database");
+$conn = new mysqli($server, $user, $password, $database);
+if ($conn->connect_error) {
+	die(json_encode(["error" => "Database connection failed"]));
+} 
+
+$method = $_SERVER["REQUEST_METHOD"];
+require_once("functions/functions.php");
+
+switch ($method) {
+	case "GET":
+		$portalID = isset($_GET["portalID"]) ? $_GET["portalID"] : false;
+		get_bookmarks($conn,$portalID);
+		break;
+}
