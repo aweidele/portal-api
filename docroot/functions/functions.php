@@ -67,11 +67,35 @@ function edit_bookmark($conn, $bookmark) {
     exit;
   }
 
-  if(!$stmt = $conn->prepare("UPDATE links SET linkName=?, url=?, cat=? WHERE linkID=?")) {
+  if(isset($bookmark["active"])) {
+    $active = $bookmark["active"];
+  } else {
+    $active = 1;
+  }
+
+  if(!$stmt = $conn->prepare("UPDATE links SET linkName=?, url=?, cat=?, active=? WHERE linkID=?")) {
     echo json_encode(["error" => "There was an error"]);
     exit;
   }
-  if(!$stmt->bind_param("sssi", $bookmark["linkName"], $bookmark["url"], $bookmark["cat"], $bookmark["linkID"])){
+  if(!$stmt->bind_param("ssssi", $bookmark["linkName"], $bookmark["url"], $bookmark["cat"], $active, $bookmark["linkID"])){
+    echo json_encode(["error" => "There was an error2"]);
+    exit;
+  }
+
+  echo json_encode(["success" => $stmt->execute()]);
+}
+
+function deleteBookmark($conn, $bookmark) {
+  if (!isset($bookmark["linkID"])) {
+    echo json_encode(["error" => "Missing link ID"]);
+    exit;
+  }
+
+  if(!$stmt = $conn->prepare("UPDATE links SET active=0 WHERE linkID=?")) {
+    echo json_encode(["error" => "There was an error"]);
+    exit;
+  }
+  if(!$stmt->bind_param("i", $bookmark["linkID"])){
     echo json_encode(["error" => "There was an error2"]);
     exit;
   }
