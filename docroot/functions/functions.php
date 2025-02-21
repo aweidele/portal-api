@@ -60,3 +60,23 @@ function add_bookmark($conn, $bookmark) {
 
   echo json_encode($response);
 }
+
+function edit_bookmark($conn, $bookmark) {
+  if (!isset($bookmark["linkName"], $bookmark["url"], $bookmark["cat"], $bookmark["linkID"])) {
+    echo json_encode(["error" => "Missing required fields"]);
+    exit;
+  }
+
+  if(!$stmt = $conn->prepare("UPDATE links SET linkName=?, url=?, cat=? WHERE linkID=?")) {
+    echo json_encode(["error" => "There was an error"]);
+    exit;
+  }
+  if(!$stmt->bind_param("sssi", $bookmark["linkName"], $bookmark["url"], $bookmark["cat"], $bookmark["linkID"])){
+    echo json_encode(["error" => "There was an error2"]);
+    exit;
+  }
+
+  echo json_encode(["success" => $stmt->execute()]);
+}
+
+//echo json_encode(["msg"=>"Put successful!", "action"=>$data["action"], "data"=>$data]);

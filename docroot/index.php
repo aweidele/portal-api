@@ -33,4 +33,10 @@ switch ($method) {
 		$data = json_decode(file_get_contents("php://input"), true);
 		add_bookmark($conn, $data);
 		break;
+	case "PUT":
+		$data = json_decode(file_get_contents("php://input"), true);
+		if($data["action"] === "edit") {
+			edit_bookmark($conn, $data);
+		}
+		break;
 }
