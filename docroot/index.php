@@ -21,24 +21,32 @@ if ($conn->connect_error) {
 	die(json_encode(["error" => "Database connection failed"]));
 } 
 
-$method = $_SERVER["REQUEST_METHOD"];
-require_once("functions/functions.php");
 
-switch ($method) {
-	case "GET":
-		$portalID = isset($_GET["portalID"]) ? $_GET["portalID"] : false;
-		get_bookmarks($conn,$portalID);
-		break;
-	case "POST":
-		$data = json_decode(file_get_contents("php://input"), true);
-		add_bookmark($conn, $data);
-		break;
-	case "PUT":
-		$data = json_decode(file_get_contents("php://input"), true);
-		if(isset($data["action"]) && $data["action"] === "setInactive") {
-			deleteBookmark($conn, $data);
-		} else {
-			edit_bookmark($conn, $data);
-		}
-		break;
-}
+$request_uri = isset($_GET['request']) ? explode("/", trim($_GET['request'], "/")) : [];
+$method = $_SERVER["REQUEST_METHOD"];
+
+
+echo json_encode([$request_uri]);
+
+// require_once("functions/functions.php");
+
+// switch ($method) {
+// 	case "GET":
+// 		$portalID = isset($_GET["portalID"]) ? $_GET["portalID"] : false;
+// 		get_bookmarks($conn,$portalID);
+// 		break;
+// 	case "POST":
+// 		$data = json_decode(file_get_contents("php://input"), true);
+// 		add_bookmark($conn, $data);
+// 		break;
+// 	case "PUT":
+// 		$data = json_decode(file_get_contents("php://input"), true);
+// 		if(isset($data["action"]) && $data["action"] === "setInactive") {
+// 			deleteBookmark($conn, $data);
+// 		} elseif(isset($data["action"]) && $data["action"] === "reorderCategories") {
+// 			reorderCategories($conn, $data);
+// 		} else {
+// 			edit_bookmark($conn, $data);
+// 		}
+// 		break;
+// }

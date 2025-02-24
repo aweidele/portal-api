@@ -33,8 +33,6 @@ function add_bookmark($conn, $bookmark) {
     exit;
   }
 
-  
-
   if(!$stmt = $conn->prepare("INSERT INTO links (linkName, url, cat, portal) VALUES (?, ?, ?, ?)")) {
     echo json_encode(["error" => "There was an error"]);
     exit;
@@ -63,7 +61,7 @@ function add_bookmark($conn, $bookmark) {
 
 function edit_bookmark($conn, $bookmark) {
   if (!isset($bookmark["linkName"], $bookmark["url"], $bookmark["cat"], $bookmark["linkID"])) {
-    echo json_encode(["error" => "Missing required fields"]);
+    echo json_encode(["error" => "Missing required fields", "function" => "edit_bookmark"]);
     exit;
   }
 
@@ -101,6 +99,28 @@ function deleteBookmark($conn, $bookmark) {
   }
 
   echo json_encode(["success" => $stmt->execute()]);
+}
+
+function reorderCategories($conn, $data) {
+  $caseStatements = [];
+  $catIDs = [];
+
+  foreach ($data["categories"] as $item) {
+    $caseStatements[] = "WHEN catID = '{$conn->real_escape_string($item['catID'])}' THEN {$conn->real_escape_string($item['rank'])}";
+    $catIDs[] = "'{$conn->real_escape_string($item['catID'])}'";
+  }
+
+  if (!empty($caseStatements)) {
+    $sql = "UPDATE link_cat SET rank = CASE " . implode(" ", $caseStatements) . " END WHERE catID IN (" . implode(",", $catIDs) . ")";
+    $conn->query($sql);
+  }
+
+  echo json_encode([
+    "data"=>$data,
+    "caseStatements"=>$caseStatements,
+    "catIDs"=>$catIDs,
+    "sql" => $sql
+  ]);
 }
 
 //echo json_encode(["msg"=>"Put successful!", "action"=>$data["action"], "data"=>$data]);
