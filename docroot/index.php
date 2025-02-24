@@ -37,6 +37,8 @@ switch ($method) {
 		$data = json_decode(file_get_contents("php://input"), true);
 		if(isset($data["action"]) && $data["action"] === "setInactive") {
 			deleteBookmark($conn, $data);
+		} elseif(isset($data["action"]) && $data["action"] === "reorderCategories") {
+			reorderCategories($conn, $data);
 		} else {
 			edit_bookmark($conn, $data);
 		}
