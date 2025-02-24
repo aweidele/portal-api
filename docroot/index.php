@@ -22,11 +22,11 @@ if ($conn->connect_error) {
 } 
 
 
-$request_uri = isset($_GET['request']) ? explode("/", trim($_GET['request'], "/")) : [];
+$request_uri = isset($_GET['request']) ? trim($_GET['request']) : '';
 $method = $_SERVER["REQUEST_METHOD"];
 
 
-// echo json_encode([$request_uri]);
+// echo json_encode([$request_uri, $method]);
 
 require_once("functions/functions.php");
 
@@ -37,16 +37,28 @@ switch ($method) {
 		break;
 	case "POST":
 		$data = json_decode(file_get_contents("php://input"), true);
-		add_bookmark($conn, $data);
+		
+		if($request_uri === 'bookmarks/add') {
+			add_bookmark($conn, $data);
+		}
+
+		if($request_uri === 'categories/add') {
+			add_category($conn, $data);
+		}
 		break;
 	case "PUT":
 		$data = json_decode(file_get_contents("php://input"), true);
-		if(isset($data["action"]) && $data["action"] === "setInactive") {
-			deleteBookmark($conn, $data);
-		} elseif(isset($data["action"]) && $data["action"] === "reorderCategories") {
-			reorderCategories($conn, $data);
-		} else {
+
+		if($request_uri === 'bookmarks/edit') {
 			edit_bookmark($conn, $data);
+		}
+
+		elseif($request_uri === 'bookmarks/set-inactive') {
+			delete_bookmark($conn, $data);
+		}
+
+		elseif($request_uri === 'categories/reorder') {
+			reorder_categories($conn, $data);
 		}
 		break;
 }
