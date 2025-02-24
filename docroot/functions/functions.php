@@ -83,7 +83,7 @@ function edit_bookmark($conn, $bookmark) {
   echo json_encode(["success" => $stmt->execute()]);
 }
 
-function deleteBookmark($conn, $bookmark) {
+function delete_bookmark($conn, $bookmark) {
   if (!isset($bookmark["linkID"])) {
     echo json_encode(["error" => "Missing link ID"]);
     exit;
@@ -101,7 +101,7 @@ function deleteBookmark($conn, $bookmark) {
   echo json_encode(["success" => $stmt->execute()]);
 }
 
-function reorderCategories($conn, $data) {
+function reorder_categories($conn, $data) {
   $caseStatements = [];
   $catIDs = [];
 
@@ -121,6 +121,40 @@ function reorderCategories($conn, $data) {
     "catIDs"=>$catIDs,
     "sql" => $sql
   ]);
+}
+
+function add_category($conn, $data) {
+  if (!isset($data["catName"], $data["portal"])) {
+    echo json_encode(["error" => "Missing required fields"]);
+    exit;
+  }
+
+  $rank = isset($data["rank"]) ? $data["rank"] : 1000;
+
+  if(!$stmt = $conn->prepare("INSERT INTO link_cat (catName, portal, rank) VALUES (?, ?, ?)")) {
+    echo json_encode(["error" => "There was an error"]);
+    exit;
+  }
+  if(!$stmt->bind_param("sss", $data["catName"], $data["portal"], $rank)){
+    echo json_encode(["error" => "There was an error2"]);
+    exit;
+  }
+
+  $response = [];
+  if($stmt->execute()) {
+    $last_id = $conn->insert_id;
+    $result = $conn->query("SELECT * FROM link_cat WHERE catID = $last_id");
+
+    if ($row = $result->fetch_assoc()) {
+      $response = ["success" => true, "data" => $row];
+    } else {
+      $response = ["success" => false, "error" => "Could not retrieve inserted record"];
+    }
+  } else {
+    $response = ["success" => false, "error" => $stmt->error];
+  }
+
+  echo json_encode($response);
 }
 
 //echo json_encode(["msg"=>"Put successful!", "action"=>$data["action"], "data"=>$data]);
