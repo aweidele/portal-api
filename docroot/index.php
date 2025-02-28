@@ -16,6 +16,29 @@ if (file_exists($config)) {
 	die('Both main and fallback files are missing.');
 }
 
+require 'vendor/autoload.php'; // Load JWT Library
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+// Function to generate JWT token
+function generateToken($user_id) {
+	$payload = [
+			"user_id" => $user_id,
+			"exp" => time() + (60 * 60) // Token expires in 1 hour
+	];
+	return JWT::encode($payload, JWT_SECRET, 'HS256');
+}
+
+// Function to validate JWT token
+function validateToken($token) {
+	try {
+			$decoded = JWT::decode($token, new Key(JWT_SECRET, 'HS256'));
+			return (array) $decoded;
+	} catch (Exception $e) {
+			return false;
+	}
+}
+
 $conn = new mysqli($server, $user, $password, $database);
 if ($conn->connect_error) {
 	die(json_encode(["error" => "Database connection failed"]));
