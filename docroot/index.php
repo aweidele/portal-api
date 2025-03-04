@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header('Content-Type: application/json; charset=utf-8');
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 $config = "config.php";
 $configDefault = "config_default.php";
@@ -14,6 +14,29 @@ if (file_exists($config)) {
 	require $configDefault;
 } else {
 	die('Both main and fallback files are missing.');
+}
+
+require 'vendor/autoload.php'; // Load JWT Library
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+// Function to generate JWT token
+function generateToken($user_id) {
+	$payload = [
+			"user_id" => $user_id,
+			"exp" => time() + (60 * 60) // Token expires in 1 hour
+	];
+	return JWT::encode($payload, JWT_SECRET, 'HS256');
+}
+
+// Function to validate JWT token
+function validateToken($token) {
+	try {
+			$decoded = JWT::decode($token, new Key(JWT_SECRET, 'HS256'));
+			return (array) $decoded;
+	} catch (Exception $e) {
+			return false;
+	}
 }
 
 $conn = new mysqli($server, $user, $password, $database);
@@ -37,6 +60,10 @@ switch ($method) {
 		break;
 	case "POST":
 		$data = json_decode(file_get_contents("php://input"), true);
+
+		if($request_uri === 'auth') {
+			login($conn, $data);
+		}
 		
 		if($request_uri === 'bookmarks/add') {
 			add_bookmark($conn, $data);
