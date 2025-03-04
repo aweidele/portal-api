@@ -1,3 +1,4 @@
+<pre>
 <?php
 // 9e56f67e
 // b8aee059
@@ -17,7 +18,10 @@ if (file_exists($config)) {
 $connection = mysqli_connect($server, $user, $password) or die ("Couldn't connect to server.");
 $db = mysqli_select_db($connection,$database) or die ("Couldn't select database");
 
-$username = '9e56f67e';
-$password = '6045';
-
-$hashed_password = password_hash($password, PASSWORD_DEFAULT);
+$sql = "SELECT * FROM portals";
+$result = $connection->query($sql);
+if (!$result) {
+  die("Error: " . $connection->error);
+}
+?>
+</pre>
