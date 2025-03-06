@@ -16,6 +16,7 @@ if (file_exists($config)) {
 	die('Both main and fallback files are missing.');
 }
 
+/*
 require 'vendor/autoload.php'; // Load JWT Library
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -38,6 +39,7 @@ function validateToken($token) {
 			return false;
 	}
 }
+*/
 
 $conn = new mysqli($server, $user, $password, $database);
 if ($conn->connect_error) {
@@ -61,9 +63,9 @@ switch ($method) {
 	case "POST":
 		$data = json_decode(file_get_contents("php://input"), true);
 
-		if($request_uri === 'auth') {
-			login($conn, $data);
-		}
+		// if($request_uri === 'auth') {
+		// 	login($conn, $data);
+		// }
 		
 		if($request_uri === 'bookmarks/add') {
 			add_bookmark($conn, $data);

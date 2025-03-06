@@ -49,7 +49,7 @@ function get_bookmarks($conn,$portalID) {
 }
 
 function add_bookmark($conn, $bookmark) {
-  if(authenticate()) {
+  // if(authenticate()) {
     if (!isset($bookmark["linkName"], $bookmark["url"], $bookmark["cat"], $bookmark["portal"])) {
       echo json_encode(["error" => "Missing required fields"]);
       exit;
@@ -79,7 +79,7 @@ function add_bookmark($conn, $bookmark) {
     }
 
     echo json_encode($response);
-  }
+  // }
 }
 
 function edit_bookmark($conn, $bookmark) {
