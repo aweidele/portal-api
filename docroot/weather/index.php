@@ -15,7 +15,7 @@ function getWeatherData() {
         return $saved;
     }
     
-    $url = "https://api.openweathermap.org/data/3.0/onecall?lat=39.268391&lon=-76.724636&appid=1d0100db75fac71d32a013ff396f1544&units=imperial";
+    $url = "https://api.openweathermap.org/data/3.0/onecall?lat=39.268391&lon=-76.724636&appid=$appid&units=imperial";
     $ch = curl_init();
 
     $options = [
