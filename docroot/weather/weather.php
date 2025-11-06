@@ -1,6 +1,5 @@
 <?php
-$origin = $_SERVER['HTTP_ORIGIN'] ?? 'http://localhost:5174';
-header("Access-Control-Allow-Origin: $origin");
+header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: X-Requested-With, Content-Type");
 header('Content-Type: application/json; charset=utf-8');
@@ -41,7 +40,6 @@ function getWeatherData($appid) {
     $data = json_decode($response);
     $data->now = $now;
     $data->dif = $dif;
-    $data->o = $origin;
     
     file_put_contents($filename, json_encode($data));
 
