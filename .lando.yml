@@ -2,3 +2,8 @@ name: portalapi
 recipe: lamp
 config:
   webroot: ./docroot
+services:
+  phpmyadmin:
+    type: phpmyadmin
+    hosts:
+      - database

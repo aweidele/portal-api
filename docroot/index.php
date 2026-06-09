@@ -58,7 +58,12 @@ require_once("functions/functions.php");
 switch ($method) {
 	case "GET":
 		$portalID = isset($_GET["portalID"]) ? $_GET["portalID"] : false;
-		get_bookmarks($conn,$portalID);
+
+		if( $request_uri === "todo" ):
+			get_todos($conn,$portalID);
+		else:
+			get_bookmarks($conn,$portalID);
+		endif;
 		break;
 	case "POST":
 		$data = json_decode(file_get_contents("php://input"), true);

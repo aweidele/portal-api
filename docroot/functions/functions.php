@@ -48,6 +48,16 @@ function get_bookmarks($conn,$portalID) {
   ]);
 }
 
+function get_todos($conn,$portalID) {
+  $sql = "SELECT * FROM portals";
+  $result = $conn->query($sql);
+  if (!$result) {
+    die("Error: " . $conn->error);
+  }
+
+  echo json_encode([$result,$sql]);
+}
+
 function add_bookmark($conn, $bookmark) {
   // if(authenticate()) {
     if (!isset($bookmark["linkName"], $bookmark["url"], $bookmark["cat"], $bookmark["portal"])) {
